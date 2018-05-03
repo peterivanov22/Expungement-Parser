@@ -1,0 +1,177 @@
+var pdfFillForm = require('pdf-fill-form');
+var fs = require('fs')
+
+
+if (process.argv.length!=4){
+  console.log("no file")
+   return;
+}
+ 
+
+ var temp_file = process.argv[2];
+ var output_file = process.argv[3];
+
+
+
+
+var lineReader = require('readline').createInterface({
+  input: require('fs').createReadStream(temp_file)
+});
+
+
+//console.log(pdfFields);
+
+
+
+
+
+
+  var arrest_date;
+  var arresting_agency;
+    var counter = 2;
+
+var pdf = pdfFillForm.writeSync('fillable_form2-3.pdf', 
+    {},{ "save": "pdf" } );
+      
+fs.writeFileSync(output_file, pdf);
+
+
+
+lineReader.on('line', function (line) {
+
+
+
+  var idx = line.indexOf("DISMISSED");
+  var np_idx = line.indexOf("NOLLE PROSEQUI");
+
+  var sol_idx1 = line.indexOf("STRICKEN") 
+  var sol_idx2 = line.indexOf("REINSTATE") 
+
+
+  var idx2 =  line.indexOf("||||");
+  var idx3 = line.indexOf("DCN");
+  var idx5 = line.indexOf("Case")
+  var idx6 = line.indexOf("Number")
+
+
+
+
+
+    if (idx3 !== -1) {
+    var idx4 = line.indexOf("Date");
+      arrest_date = line.substring(idx4);
+      arrest_date = arrest_date.substring(arrest_date.indexOf(":")+1);
+      arrest_date = arrest_date.substring(0, arrest_date.indexOf("||||"));
+
+
+    var agency_idx = line.indexOf("Agency");
+    arresting_agency = line.substring(agency_idx);
+
+    var agency_idx2 = arresting_agency.indexOf(":")
+
+    var ncic_idx =  arresting_agency.indexOf("CIC");
+
+    if (ncic_idx!= -1)
+      arresting_agency = arresting_agency.substring(agency_idx2+1,ncic_idx-1)
+    else 
+      arresting_agency = arresting_agency.substring(agency_idx2+1, arresting_agency.indexOf("||||"));
+
+    var pd = "POLICE DEPARTMENT";
+
+    var pd_idx =  arresting_agency.indexOf(pd);
+    if (pd_idx!= -1 )
+      arresting_agency = arresting_agency.substring(0, pd_idx) + " PD " + arresting_agency.substring(pd_idx+ pd.length);
+
+
+    }
+
+
+    if (idx != -1 || np_idx != -1 || sol_idx2 != -1 || sol_idx1 != -1) {
+
+      //var temp = line.substring(0,idx2);
+      if (idx5 != -1)
+        var temp2 = line.substring(idx5);
+      else 
+        var temp2 = line.substring(idx6);
+      var temp3 = temp2.substring(temp2.indexOf(":")+1);
+      var temp4 = temp3.substring(0, temp3.indexOf("||||"));
+
+      var charge = line.substring(0, idx2);
+
+      var c1 = charge.indexOf("AGGRAVATED ASSAULT")
+      if (c1!= -1){
+        charge = "Agg. Asslt";
+      }
+
+      var c2 = charge.indexOf("DUI/A")
+      if (c2!= -1){
+        charge = "DUI/ALCOHOL";
+      }
+
+      var c3 = charge.indexOf("DUI/D")
+      if (c3!= -1){
+        charge = "DUI/DRUGS";
+      }
+
+      var c4 = charge.indexOf("ORDI")
+      if (c4!= -1){
+        charge = "ORDINANCE";
+      }
+
+      var c5 = charge.indexOf("SORDER")
+      if (c5!= -1){
+        charge = "Dis. Conduct";
+      }
+
+      var c6 = charge.indexOf("LIC REVOKED")
+      if (c6!= -1){
+        charge = "Dr. Lic. Revok.";
+      }
+
+      var c7 = charge.indexOf("AGGRAVATED BATTERY")
+      if (c7!= -1){
+        charge = "Agg. Battery";
+      }
+
+      var c8 = charge.indexOf("BATTERY")
+      if (c8!= -1){
+        charge = "Battery";
+      }
+
+      var c9 = charge.indexOf("INSURANCE-OPERATE")
+      if (c9!= -1){
+        charge = "Uninsured";
+      }
+
+
+
+
+      var case_num_key = "Arrest or Case Number"+counter.toString();;
+      var arrest_date_key = "Date of Arrest"+counter.toString();
+      var charge_key = "Charge"+counter.toString();
+      var arresting_agency_key =  "Arresting Agency"+counter.toString();
+
+
+      //res.write(line + '\n');
+      var pdf = pdfFillForm.writeSync(output_file, 
+    { [case_num_key] : temp4, [arrest_date_key] : arrest_date , [charge_key] : charge, [arresting_agency_key] : arresting_agency}, { "save": "pdf" } );
+      
+      fs.writeFileSync(output_file, pdf);
+
+      counter+=1;
+    }
+  //console.log('Line from file:', line);
+});
+//;var pdfFields = pdfFillForm.readSync('fillable_expungement2-3.pdf');
+//console.log(pdfFields);
+
+
+/*
+pdfFillForm.read('fillable_form.pdf')
+.then(function(result) {
+    console.log(result);
+}, function(err) {
+    console.log(err);
+});
+
+*/

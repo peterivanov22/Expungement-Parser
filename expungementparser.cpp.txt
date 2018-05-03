@@ -1,0 +1,713 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+
+int main( int argc, char *argv[] ) {
+
+	ifstream inFile(argv[1]);
+
+    string currLine;
+
+    if (argc!= 3){
+    	return -1;
+    }
+
+    ofstream result;
+  	result.open (argv[2]);
+ 	if ( (result.rdstate() & ofstream::failbit ) != 0 )
+    	cout << "Error opening 'result.txt'\n";
+  	
+
+	result << "\n----------------------------------------------------------------------------\n";
+	result << "----------------------------------------------------------------------------\n";
+	result << "----------------------------------------------------------------------------\n \n";
+
+
+  	result << "\n START OF COURT CHARGES .\n";
+
+  	bool flag = false;
+  	bool flag2 = false;
+  	bool flag3 = false;
+
+
+
+
+//     while (inFile)
+//    	{
+//    		flag3 = false;
+//    		//int index1 = currLine.find("DCN");
+//    		//int index2 = currLine.find("Date of Arrest");
+// 		//find beggining of arrest record
+//         if(currLine.find("DCN") != -1 || currLine.find("Date of Arrest") != -1){
+//         	//the following 2 things appear in same text line
+
+//         	//parse DCN #
+//         	/*
+// 			string temp1 = currLine.substr(currLine.find(":") + 1);
+// 			string temp2 = temp1.substr(0, temp1.find("Date"));
+		
+			
+// 			/*
+
+// 			if (index1 != -1)
+// 				string temp2 = currLine.substr(0, index1);
+
+// 			else 
+// 				string temp2 = "Can't find DCN #"
+
+// 			//parse date of arrest
+// 			/*
+// 			string temp3 = currLine.substr(currLine.find(":") + 1);
+// 			string temp4 = temp3.substr(currLine.find(":") + 1);
+// 			*/
+
+// 			/*
+// 			if (index1 != -1)
+// 				string temp4 = currLine.substr(0, index1);
+
+// 			else 
+// 				string temp4 = "Can't Arrest Date"
+
+// 			string temp4 = currLine.substr(currLine.find("Date"));
+
+// 			*/
+
+// 			result << " \n ---------------------------------------------------------------------------- \n \n \n";
+// 			result << currLine +  "  ||||  ";;
+
+
+// 			cout << " ---------------------------------------------------------------------------- \n \n ";
+
+//     		cout << currLine <<endl;
+// 			cout << " ---------------------------------------------------------------------------- \n \n ";
+
+// 			getline(inFile, currLine);
+
+// 			while((currLine.find("DCN") == -1  && currLine.find("Date of Arrest") == -1) && inFile){
+
+
+//         		cout << currLine <<endl;
+
+// 				flag2 = false;
+
+// 				//Parse arresting agency (headers conatain "Arresting Agency")
+// 				// The text line after will have have "NCIC: 123..." so I parse that out
+// 	       		if(currLine.find("arresting") != -1 || currLine.find("Arresting") != -1){
+
+
+// 	       			/*
+// 		       		string temp1 = currLine.substr(currLine.find(":") + 1);
+// 		       		string temp2 = temp1.substr(0, temp1.find("NCIC"));
+// 		       		*/
+// 		       		int index_ncic = currLine.find("NCIC");
+// 		       		string temp2;
+
+
+// 		       		if (index_ncic != -1)
+// 		       			temp2 = currLine.substr(0, index_ncic);
+// 		       		else 
+// 		       			temp2 = currLine;
+
+// 		       		result << temp2 +  "  ||||  ";
+
+// 				}
+
+
+
+// 				//Look for the actual court charges and dispositons, header is "Court Charges/Disposition", 
+// 				//but read by tesseract as court chartres usually
+// 		        if (currLine.find("Court Chartres")!= -1 || currLine.find("/Dis")!= -1){
+
+//        				getline(inFile, currLine);
+
+
+// 		        	while((currLine.find("DCN") == -1 && currLine.find("Date of Arrest") == -1) && inFile){
+
+
+
+// 		        		flag = false;
+// 		        		//Count Statute Citation Literal Description Incoate Code Class shows up in one line
+// 		        		//Next line will be empty, then line after will have Count #, Statue Citation, Literal Description, Inchoate Code, Class,
+// 		        		//Might look like "I 430 [LCS 65.0/2 FOID ID CARDS O A"
+// 		        		//I just throw everything in and let attorneys deal with it
+// 		       			if ( currLine.find("Citation Literal") != -1 || currLine.find("Count Statute") != -1){
+		       				
+// 		       				getline(inFile, currLine);
+		       				
+// 		       				//if next line is empty or has random marks
+// 		       				while (currLine.length() < 10){
+// 		       					getline(inFile, currLine);
+// 		       				} 
+
+// 		       				result <<  "\n \n" + currLine + "  ||||  ";
+
+// 		       				getline(inFile, currLine);
+
+// 		       				//i do it this way in case the word disposition is too mangled to look for
+// 		       				//so we don't end up skipping the rest of the possible info till disposition found 
+// 		       				while(currLine.length() < 15){
+// 		       					getline(inFile, currLine);
+// 		       				}
+
+
+// 		       				//make sure it's disposition line
+// 		       				if (currLine.find("Disposition") != -1){
+		       					
+// 		       					/*
+// 		       					string temp1 = currLine.substr(currLine.find(":") + 1);
+// 					       		string temp2 = temp1.substr(0, temp1.find(":"));
+
+// 					       		result << temp2 +  "  ||||  ";
+
+// 					       		string temp3 = currLine.substr(currLine.find(":") + 1);
+// 					       		string temp4 = temp3.substr(temp3.find(":") + 1);
+
+// 					       		result << temp4 +  "  ||||  ";
+// 					       		*/
+
+// 					       		result <<  currLine +  "  ||||  ";
+
+// 		       				}
+
+
+// 		       				else {
+// 		       					//cant find result of disposition
+// 		       					result <<  "Can't find disposition result  ||||  ";
+// 		       				}
+
+// 		       				getline(inFile, currLine);
+
+// 							while(currLine.length() < 10){
+// 		       					getline(inFile, currLine);
+// 		       				}
+
+// 		       				if (currLine.find("Number") != -1) {
+		       					
+// 		       					/*
+// 		       					string temp1 = currLine.substr(currLine.find(":") + 1);
+// 					       		*/
+
+// 					       		result << currLine +  "  ||||  ";
+
+// 		       				}
+
+// 		       				else {
+// 		       					//cant find result of disposition
+// 		       					result <<  "Can't find case number  ||||  ";
+// 		       				}
+
+
+
+// 		       				getline(inFile, currLine);
+
+// 		       				while(currLine.length() < 10){
+// 		       					getline(inFile, currLine);
+// 		       				}
+
+// 		       				if (currLine.find("Agency") != -1 || currLine.find("Name") != -1) {
+		       					
+// 		       					/*
+// 		       					string temp1 = currLine.substr(currLine.find(":") + 1);
+// 		       					*/
+
+// 		       					int index_ncic2 = currLine.find("NCIC");
+// 		       					string temp2;
+
+// 		       					if (index_ncic2 != -1)
+// 					       			temp2 = currLine.substr(0, index_ncic2);
+// 					       		else 
+// 					       			temp2 = currLine;
+					       		
+
+// 					       		result << temp2 +  "  ||||  ";			
+
+
+// 			       				while (currLine.find("DCN") == -1  && currLine.find("Date of Arrest") == -1 && inFile ){
+		       					
+		       				
+		       					
+// 			       					if (currLine.find("Citation Literal") != -1 || currLine.find("Count Statute") != -1){
+// 			       						flag = true;
+// 			       						break;
+// 			       					}
+
+// 									if (currLine.length() > 10){
+
+// 				       					if (currLine.find("Status Sentence") == -1 && currLine.find("Fine Amount") == -1) {
+
+// 				       						result << currLine +  "  ||||  ";	
+
+// 				       					}				       					
+
+// 				       				} 		
+
+
+// 		       						getline(inFile, currLine);
+// 		       					}
+
+// 		       					flag3 = true;	       				
+
+// 		       				}		       		
+
+// 	       				}
+
+// /*
+// 							while(currLine.length() < 10){
+// 		       					getline(inFile, currLine);
+// 		       				}
+// */
+
+
+// 		       			if (flag){
+// 		       				continue;
+// 		       			}
+// 		       			if (flag3){
+// 		       				break;
+// 		       			}
+
+// 		       			getline(inFile, currLine);
+
+// 		        	}
+
+// 		        	flag2 = true;
+
+// 		       	}
+
+// 			    if (flag2){
+// 			    	continue;
+// 			    }
+
+
+// 			    getline(inFile, currLine);
+
+
+//        		//next while loop after hitting DCN
+//        		}
+//   		//if hit DCN
+//   		}
+	
+
+//   	if (flag3)
+//   		continue;
+
+// 	getline(inFile, currLine);
+// 	}
+// 	//big while loop
+
+
+
+/*
+        else if(currLine.find("Arrest Type") != -1 || (currLine.find("Date of Offense") != -1){
+
+       		string temp1 = currLine.substr(currLine.find(":") + 1);
+       		string temp2 = temp1.substr(temp1.find(":") + 1);
+
+       		result << temp2 + "   ";
+
+      	}
+
+*/
+
+	ifstream inFile2(argv[1]);
+
+    
+
+
+	result << "\n\n----------------------------------------------------------------------------\n";
+	result << "----------------------------------------------------------------------------\n";
+	result << "----------------------------------------------------------------------------\n \n";
+
+  	result << "START OF RECORDS.\n";
+
+    while (inFile2)
+   	{
+   		flag2 = false;
+		//cout << currLine<< endl;
+
+		//find beggining of arrest record
+        if(currLine.find("DCN") != -1 || currLine.find("Date of Arrest") != -1){
+			
+
+
+        	//the following 2 things appear in same text line
+
+        	//parse DCN #
+        	/*
+			string temp1 = currLine.substr(currLine.find(":") + 1);
+			string temp2 = temp1.substr(0, temp1.find("Date"));
+			*/
+
+
+			
+
+			//parse date of arrest
+			/*
+			string temp3 = currLine.substr(currLine.find(":") + 1);
+			string temp4 = temp3.substr(currLine.find(":") + 1);
+			*/
+			/*
+			string temp2 = currLine.substr(0, currLine.find("Date"));
+
+			string temp4 = currLine.substr(currLine.find("Date"));
+			*/
+			result << "\n ---------------------------------------------------------------------------- \n \n \n";
+			result << currLine +  "  ||||  ";;
+
+			//result << temp2 +  "  ||||  " + temp4 + "  ||||  ";
+
+			getline(inFile2, currLine);
+
+			while((currLine.find("DCN") == -1  && currLine.find("Date of Arrest") == -1) && inFile2){
+
+
+
+				flag2 = false;
+
+				//Parse arresting agency (headers conatain "Arresting Agency")
+				// The text line after will have have "NCIC: 123..." so I parse that out
+	       		if(currLine.find("arresting") != -1 || currLine.find("Arresting") != -1){
+
+
+	       			/*
+		       		string temp1 = currLine.substr(currLine.find(":") + 1);
+		       		string temp2 = temp1.substr(0, temp1.find("NCIC"));
+		       		*/
+		       		int index_ncic = currLine.find("NCIC");
+		       		string temp2;
+
+
+		       		if (index_ncic != -1)
+		       			temp2 = currLine.substr(0, index_ncic);
+		       		else 
+		       			temp2 = currLine;
+
+		       		result << temp2 +  "  ||||  ";
+
+				}
+
+
+
+	
+				//Look for the actual court charges and dispositons, header is "Court Charges/Disposition", 
+				//but read by tesseract as court chartres usually
+				if(currLine.find("Agency C") != -1 || currLine.find("y Case N") != -1){
+
+
+
+		        	while((currLine.find("DCN") == -1 && currLine.find("Date of Arrest") == -1) && inFile2){
+
+		        		flag = false;
+		        		//Count Statute Citation Literal Description Incoate Code Class shows up in one line
+		        		//Next line will be empty, then line after will have Count #, Statue Citation, Literal Description, Inchoate Code, Class,
+		        		//Might look like "I 430 [LCS 65.0/2 FOID ID CARDS O A"
+		        		//I just throw everything in and let attorneys deal with it
+						
+		        		//if doesnt catch this it freezes
+		        		//cout << "xxx::   " + currLine <<endl;
+
+
+						if (currLine.find("ling Decis")!= -1 || currLine.find("sion Date")!= -1){
+
+			        		while(currLine.find("Agency") == -1  && currLine.find("Name") == -1 && inFile2){ 
+
+			        			//(currLine.find("Charges/") == -1 && currLine.find("/Dis") == -1 && currLine.find("Court (") == -1 ) 
+
+			        			getline(inFile2, currLine);
+			        		} 
+
+			        		/*
+			        		if ((currLine.find("Charges/") == -1 && currLine.find("/Dis") == -1 && currLine.find("Court (") == -1 )){
+
+				        		flag = true;
+
+
+			        		}
+
+			        		else if (true){
+
+			        			getline(inFile2, currLine);
+
+			        			while(currLine.length() < 15 && inFile2){
+			       					getline(inFile2, currLine);
+			       				}
+
+			       				if (currLine.find("ling Decis")!= -1 || currLine.find("Decision Date")!= -1){
+
+			       				}
+
+
+
+			        		}
+			        		*/
+
+
+			        		//cout << "yes::   " + currLine <<endl;
+
+			        	}
+     				
+
+						/*else if (currLine.find("Court Chartres")!= -1 || currLine.find("/Dis")!= -1){
+
+				        		
+				        		while((currLine.find("DCN") == -1 && currLine.find("Date of Arrest") == -1) && inFile2){ 
+
+				        			getline(inFile2, currLine);
+				        		} 
+
+				        		flag = true;
+				        	}
+						*/
+
+		       			if ( currLine.find("Citation Literal") != -1 || currLine.find("Count Statute") != -1){
+		       				
+		       				getline(inFile2, currLine);
+		       				
+		       				//if next line is empty or has random marks
+		       				while (currLine.length() < 10){
+		       					getline(inFile2, currLine);
+		       				} 
+
+		       				result <<  "\n \n" + currLine + "  ||||  ";
+
+		       				getline(inFile2, currLine);
+
+		       				//i do it this way in case the word disposition is too mangled to look for
+		       				//so we don't end up skipping the rest of the possible info till disposition found 
+		       				while(currLine.length() < 15){
+		       					getline(inFile2, currLine);
+		       				}
+
+
+		       				//cout<< currLine <<endl;
+
+		       				//make sure it's arrest line
+		       				if (currLine.find("Arrest Type") != -1 || currLine.find("Date of Offense") != -1){
+		       					
+		       					
+		       					/*
+		       					string temp1 = currLine.substr(currLine.find(":") + 1);
+					       		string temp2 = temp1.substr(0, temp1.find(":"));
+
+					       		result << temp2 +  "  ||||  ";
+
+					       		string temp3 = currLine.substr(currLine.find(":") + 1);
+					       		string temp4 = temp3.substr(temp3.find(":") + 1);
+
+					       		result << temp4 +  "  ||||  ";
+					       		*/
+					       		int index_colon = currLine.find(":");
+					       		string temp3;
+
+					       		if (index_colon != -1)
+					       			temp3 = currLine.substr(index_colon + 1);
+								else
+									temp3 = currLine;
+
+					       		result <<  temp3 +  "  ||||  ";
+
+					       		//cout << "-----" <<endl;
+
+		       					//cout << currLine <<endl;
+
+
+					       		getline(inFile2, currLine);
+
+
+								while(currLine.length() < 10 && inFile2){
+			       					getline(inFile2, currLine);
+			       				}
+
+		       					//cout << currLine <<endl;
+
+
+			       				//skip domestic violence
+			       				getline(inFile2, currLine);
+
+
+
+			       				while(currLine.length() < 10 && inFile2){
+			       					getline(inFile2, currLine);
+			       				}
+
+		       					//cout << currLine <<endl;
+
+
+			       				if (currLine.find("t Ca") != -1 || currLine.find("t Case Number") != -1) {
+			       					//cout << currLine <<endl;
+			       					/*
+			       					string temp1 = currLine.substr(currLine.find(":") + 1);
+						       		*/
+						       		getline(inFile2, currLine);
+
+
+		       					}
+
+			       				while(currLine.length() < 10 && inFile2){
+			       					getline(inFile2, currLine);
+			       				}
+
+		       					//cout << currLine <<endl;
+
+
+					       		//cout << "-----" <<endl;
+
+
+			       				if (currLine.find("Warrant") != -1) {
+			       					
+			       					/*
+			       					string temp1 = currLine.substr(currLine.find(":") + 1);
+						       		*/
+						       		result << currLine +  "  ||||  ";
+
+		       					}
+
+		       				}
+
+
+							else if (currLine.find("Dis") != -1 || currLine.find("position")){
+		       					/*
+		       					string temp1 = currLine.substr(currLine.find(":") + 1);
+					       		string temp2 = temp1.substr(0, temp1.find(":"));
+
+					       		result << temp2 +  "  ||||  ";
+
+					       		string temp3 = currLine.substr(currLine.find(":") + 1);
+					       		string temp4 = temp3.substr(temp3.find(":") + 1);
+
+					       		result << temp4 +  "  ||||  ";
+					       		*/
+
+					       		result <<  currLine +  "  ||||  ";
+
+
+			       				
+
+
+								getline(inFile2, currLine);
+
+								while(currLine.length() < 10){
+			       					getline(inFile2, currLine);
+			       				}
+
+			       				//cout<< currLine <<endl;
+
+			       				if (currLine.find("Number") != -1) {
+			       					
+			       					/*
+			       					string temp1 = currLine.substr(currLine.find(":") + 1);
+						       		*/
+
+						       		result << currLine +  "  ||||  ";
+
+			       				}
+
+			       				else {
+			       					//cant find result of disposition
+			       					result <<  "Can't find case number  ||||  ";
+			       				}
+
+
+
+			       				getline(inFile2, currLine);
+
+			       				while(currLine.length() < 10){
+			       					getline(inFile2, currLine);
+			       				}
+
+			       				if (currLine.find("Agency") != -1 || currLine.find("Name") != -1) {
+			       					
+			       					/*
+			       					string temp1 = currLine.substr(currLine.find(":") + 1);
+			       					*/
+
+			       					int index_ncic2 = currLine.find("NCIC");
+			       					string temp2;
+
+			       					if (index_ncic2 != -1)
+						       			temp2 = currLine.substr(0, index_ncic2);
+						       		else 
+						       			temp2 = currLine;
+						       		
+
+						       		result << temp2 +  "  ||||  ";			
+
+
+				       				while (currLine.find("DCN") == -1  && currLine.find("Date of Arrest") == -1 && inFile2 ){
+			       					
+			       						
+			       					
+				       					if (currLine.find("Citation Literal") != -1 || currLine.find("Count Statute") != -1){
+				       						flag = true;
+				       						break;
+				       					}
+
+										if (currLine.length() > 10){
+
+					       					if (currLine.find("Status Sentence") == -1 && currLine.find("Fine Amount") == -1) {
+
+					       						result << currLine +  "  ||||  ";	
+
+					       					}				       					
+
+					       				} 		
+
+			       						getline(inFile2, currLine);
+			       					}
+
+			       					//cout << "boob:  " + currLine << endl;
+
+			       					flag = true;					       		
+
+			       				}
+
+		       				}
+
+		       			else {
+	       					result <<  "Something went wrong  ||||  ";
+		       			}
+
+		       			}
+
+		       			if (flag){
+		       				continue;
+		       			}
+		       			getline(inFile2, currLine);
+
+		        	
+       				}
+
+		        	flag2 = true;
+
+		       	}
+	
+
+			   if (flag2){
+			    	break;
+			    }
+			    getline(inFile2, currLine);
+       		//next while loop after hitting DCN
+       		}
+       		flag2 = true;
+  		//if hit DCN
+  		}
+
+	    if (flag2){
+	    	continue;
+	    }	
+		getline(inFile2, currLine);
+
+	//big while loop
+	}
+
+  	result.close();
+  	inFile.close();
+  	inFile2.close();
+
+
+
+
+	return 0;
+}
